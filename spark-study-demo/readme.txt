@@ -1,0 +1,1 @@
+./spark-submit --class com.genpact.housingloanwithspark.bigdata.HousingLoan  --executor-memory 2g --num-executors 3 file:////opt/hadoop/hadoop-2.6.0/share/hadoop/mapreduce/housingloanwithspark.jar
