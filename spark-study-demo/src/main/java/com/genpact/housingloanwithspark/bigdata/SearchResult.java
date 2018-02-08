@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -15,7 +14,7 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 
 import com.alibaba.fastjson.JSONObject;
-import com.genpact.housingloanwithspark.utils.HUtils;
+import com.genpact.utils.HUtils;
 
 public class SearchResult {
 	public static void main(String[] args) throws IllegalArgumentException, IOException {

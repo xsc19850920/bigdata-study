@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.genpact.housingloanwithspark.utils;
+package com.genpact.utils;
 
 import java.io.IOException;
 

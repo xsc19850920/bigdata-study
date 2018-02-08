@@ -9,8 +9,8 @@ import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
 
-import com.genpact.housingloanwithspark.utils.HUtils;
 import com.genpact.stock.bigdata.model.Stock;
+import com.genpact.utils.HUtils;
 
 public class StockCalc {
 	private static final String JAR_PATH = "/bigdata/spark/xsc/stockcalc.jar";

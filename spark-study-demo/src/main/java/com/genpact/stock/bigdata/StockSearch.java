@@ -9,8 +9,8 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 
 import com.alibaba.fastjson.JSONObject;
-import com.genpact.housingloanwithspark.utils.HUtils;
 import com.genpact.stock.bigdata.model.Stock;
+import com.genpact.utils.HUtils;
 
 public class StockSearch {
 	private static final String JAR_PATH = "/bigdata/spark/xsc/stockcalc.jar";
