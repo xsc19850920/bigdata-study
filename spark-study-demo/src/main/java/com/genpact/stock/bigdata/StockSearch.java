@@ -55,7 +55,7 @@ public class StockSearch {
         sql = sql.replace(":timestamp", args[0]);
 		DataFrame teenagers = sqlContext.sql(sql);
 		JavaRDD<String> stockList = teenagers.javaRDD().map((Function<Row, String>) r -> r.toString()+System.lineSeparator());
-		stockList.foreach(System.out::println);
+//		stockList.foreach(System.out::println);
 		stockList.saveAsTextFile(HDFS_BASE_PATH + SEARCHRESULT);
 
 		ctx.close();
