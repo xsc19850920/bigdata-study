@@ -91,9 +91,14 @@ public class HUtils {
 	}
 
 	public static boolean deleteOnExit(final String path) {
-		FileSystem fs = getFs();
+		Path dstPath = new Path(path);
 		try {
-			fs.deleteOnExit(new Path(path));
+			FileSystem hdfs = dstPath.getFileSystem(new Configuration());
+			if (hdfs.exists(dstPath)) {
+				hdfs.delete(dstPath, true);
+			} else {
+				return false;
+			}
 		} catch (IOException ie) {
 			ie.printStackTrace();
 			return false;
