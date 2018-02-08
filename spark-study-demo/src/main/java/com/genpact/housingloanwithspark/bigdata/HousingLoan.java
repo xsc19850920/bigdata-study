@@ -6,20 +6,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
 
-import com.genpact.housingloanwithspark.utils.DateUtils;
 
 public class HousingLoan {
 	private static final Pattern SPACE = Pattern.compile(" ");
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-
-		SparkConf sparkConf = new SparkConf().setAppName("HouseLoanWithSpark").setMaster("spark://58.2.221.224:7077").setJars(new String[] { "/bigdata/hadoop/hadoop-2.6.5/share/hadoop/mapreduce/housingloanwithspark.jar" });
+		final String pattern = "MM-dd-yyyy";
+		SparkConf sparkConf = new SparkConf().setAppName("HouseLoanWithSpark").setMaster("spark://58.2.221.224:7077").setJars(new String[] { "/bigdata/spark/xsc/housingloanwithspark.jar" });
 
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 		
@@ -54,7 +55,7 @@ public class HousingLoan {
 				// double monthCapital = 0;
 				double tmpCapital = 0;
 				// double monthInterest = 0;
-				Date startMonth = DateUtils.parseDate(loanRecord.getStartMonth());
+				Date startMonth = DateUtils.parseDate(loanRecord.getStartMonth(),new String[]{pattern});
 				StringBuffer sb = new StringBuffer();
 				for (int i = 1; i <= month; i++) {
 					BillRecordWritable billRecord = new BillRecordWritable();
@@ -67,7 +68,7 @@ public class HousingLoan {
 					// (loanRecord.getInvest() / month) + "，利息："
 					// + monthInterest);
 					billRecord.setMonthPrincipal(loanRecord.getInvest() / month);
-					billRecord.setMonthOnBill(DateUtils.format(org.apache.commons.lang.time.DateUtils.addMonths(startMonth, i)));
+					billRecord.setMonthOnBill(DateFormatUtils.format(DateUtils.addMonths(startMonth, i),pattern));
 					sb.append(billRecord).append("!");
 //					list.add(billRecord);
 				}

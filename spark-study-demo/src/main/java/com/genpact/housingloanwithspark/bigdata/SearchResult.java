@@ -37,8 +37,6 @@ public class SearchResult {
 			}
 		});
 		
-		
-
 			DataFrame schema = sqlContext.createDataFrame(result, LoanRecordWritable.class);
 			schema.registerTempTable("loanRecord");
 			
@@ -59,7 +57,7 @@ public class SearchResult {
 				}
 			});
 			 
-			HUtils.getFs().deleteOnExit(new Path("hdfs://58.2.221.224:9000/xsc/searchResult"));
+			HUtils.deleteOnExit("hdfs://58.2.221.224:9000/xsc/searchResult");
 			billList.saveAsTextFile("hdfs://58.2.221.224:9000/xsc/searchResult");
 
 			ctx.close();
