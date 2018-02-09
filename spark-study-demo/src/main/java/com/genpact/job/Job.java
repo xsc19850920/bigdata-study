@@ -1,4 +1,6 @@
-package com.genpact.stock.bigdata;
+package com.genpact.job;
+
+import java.io.IOException;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -13,16 +15,8 @@ import com.genpact.constant.Constant;
 import com.genpact.stock.bigdata.model.Stock;
 import com.genpact.utils.HUtils;
 
-public class StockSearch {
-
-
-	/*
-	 * SELECT STOCK_NAME, DAY, MIN(OPEN_PRICE) AS OPEN_PRICE,
-	 * MAX(TRANSACTION_PRICE) AS CLOSE_PRICE, SUM(VOLUMN) AS TOTAL_VOLUMN,
-	 * SUM(TRANSACTION_AMOUNT) AS TOTAL_TRANSACTION_AMOUNT FROM TRAN GROUP BY
-	 * STOCK_NAME,SUBSTR(TIMESTAMP,1,8)
-	 */
-	public static void main(String[] args) {
+public class Job {
+	public static void main(String[] args) throws IOException {
 		HUtils.deleteOnExit(Constant.HDFS_BASE_PATH + Constant.SEARCHRESULT);
 		
 		SparkConf sparkConf = new SparkConf().setAppName(Constant.STOCK_SEARCH_APP_NAME).setMaster(Constant.SPARK_HOST).setJars(new String[] { Constant.JAR_PATH });
@@ -46,7 +40,7 @@ public class StockSearch {
 		        		+ " from stock"
 		        		+ " where timestamp = :timestamp";
         
-        sql = sql.replace(":timestamp", args[0]);
+        sql = sql.replace(":timestamp", "20180206");
 		DataFrame teenagers = sqlContext.sql(sql);
 		JavaRDD<String> stockList = teenagers.javaRDD().map((Function<Row, String>) r -> r.toString()+System.lineSeparator());
 //		stockList.foreach(System.out::println);
@@ -54,7 +48,10 @@ public class StockSearch {
 
 		ctx.close();
 		ctx.stop();
+		//读取预测结果
+        String result = HUtils.readFromHDFS(Constant.HDFS_BASE_PATH + Constant.SEARCHRESULT + "/" + Constant.RESULTFILE);
+        //检测结果
+        System.out.println(result);
 
-		System.exit(0);
 	}
 }

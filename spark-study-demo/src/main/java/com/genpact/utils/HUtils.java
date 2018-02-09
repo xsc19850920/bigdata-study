@@ -4,8 +4,10 @@
 package com.genpact.utils;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
@@ -105,5 +107,22 @@ public class HUtils {
 		}
 		return true;
 	}
+	
+	
+	public static String readFromHDFS(String file) throws IOException {
+        FileSystem fs = FileSystem.get(URI.create(file), conf);
+        FSDataInputStream hdfsInStream = fs.open(new Path(file));
+        byte[] ioBuffer = new byte[1];
+        int readLen = hdfsInStream.read(ioBuffer);
+        String result = "";
+        while(-1 != readLen){
+            result += new String(ioBuffer);
+            readLen = hdfsInStream.read(ioBuffer);
+        }
+        hdfsInStream.close();
+        fs.close();
+
+        return result;
+    }
 
 }

@@ -18,10 +18,11 @@ public class Stream {
 			
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public Boolean call(String line) throws Exception {
-				return line.contains("error");
+			public Boolean call(String v1) throws Exception {
+				 return v1.contains("error");
 			}
+
+			
 		});
 		
 		errorLines.print();

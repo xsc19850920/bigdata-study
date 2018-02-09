@@ -9,18 +9,11 @@ import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
 
+import com.genpact.constant.Constant;
 import com.genpact.stock.bigdata.model.Stock;
 import com.genpact.utils.HUtils;
 
 public class StockCalc {
-	private static final String JAR_PATH = "/bigdata/spark/xsc/stockcalc.jar";
-	private static final String APP_NAME = "StockCalc";
-	private static final String SOURCE_FILE = "stockcalc.txt";
-
-	private static final String SPARK_HOST = "spark://58.2.221.224:7077";
-	private static final String HDFS_BASE_PATH = "hdfs://58.2.221.224:9000/xsc/";
-	private static final String FLAG = ",";
-	private static final String STOPWORDS = "STOCK_NAME";
 
 	/*
 	 * SELECT STOCK_NAME, DAY, MIN(OPEN_PRICE) AS OPEN_PRICE,
@@ -30,16 +23,16 @@ public class StockCalc {
 	 */
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		HUtils.deleteOnExit(HDFS_BASE_PATH + APP_NAME);
+		HUtils.deleteOnExit(Constant.HDFS_BASE_PATH + Constant.STOCK_CALC_APP_NAME);
 
-		SparkConf sparkConf = new SparkConf().setAppName(APP_NAME).setMaster(SPARK_HOST).setJars(new String[] { JAR_PATH });
+		SparkConf sparkConf = new SparkConf().setAppName(Constant.STOCK_CALC_APP_NAME).setMaster(Constant.SPARK_HOST).setJars(new String[] { Constant.JAR_PATH });
 
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 
-		JavaRDD<String> lines = ctx.textFile(HDFS_BASE_PATH + SOURCE_FILE, 1);
+		JavaRDD<String> lines = ctx.textFile(Constant.HDFS_BASE_PATH + Constant.SOURCE_FILE, 1);
 		JavaRDD<String> valueRdd = lines.map((Function<String, Stock>) s -> {
-			if (!s.startsWith(STOPWORDS)) {
-				return new Stock(s.split(FLAG));
+			if (!s.startsWith(Constant.STOPWORDS)) {
+				return new Stock(s.split(Constant.FLAG));
 			} else {
 				return null;
 			}
@@ -73,7 +66,7 @@ public class StockCalc {
 			return stock.toString();
 		}).values();
 
-		valueRdd.saveAsTextFile(HDFS_BASE_PATH + APP_NAME);
+		valueRdd.saveAsTextFile(Constant.HDFS_BASE_PATH + Constant.STOCK_CALC_APP_NAME);
 
 		ctx.close();
 		ctx.stop();
