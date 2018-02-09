@@ -14,21 +14,24 @@ public class SparkSubmitProcess {
 		 SparkRestClient sparkRestClient = SparkRestClient.builder()
 						.masterHost("58.2.221.224")
 						.sparkVersion("1.6.3")
-						.masterPort(6066)
-						.clusterMode(ClusterMode.yarn)
+						.masterPort(6066) //submit to spark rest api (6066 from spark webaddress 58.2.221.224:8080)
+						.clusterMode(ClusterMode.mesos)
 						.build();
-		 
-//		 String submissionId = new JobSubmitRequestSpecificationImpl(sparkRestClient).appName("MySparkJob!").appResource("file://bigdata/spark/xsc/stockcalc.jar")
-//		 .mainClass("com.genpact.job.Job").submit();
 		 
 		 String submissionId = sparkRestClient.prepareJobSubmit()
 						.appName("MySparkJob!")
 						.mainClass("com.genpact.job.Job")
 						.appResource("/bigdata/spark/xsc/stockcalc.jar")
 						.submit();
+		 
+		 
 		 JobStatusResponse jobStatus =  sparkRestClient.checkJobStatus()
 				    								   .withSubmissionIdFullResponse(submissionId);
 				    
-		 System.out.println(jobStatus.getMessage());
+		 System.out.println(" success : " +jobStatus.getSuccess());
+		 System.out.println(" SubmissionId : " +jobStatus.getSubmissionId());
+		 System.out.println(" WorkerHostPort : " +jobStatus.getWorkerHostPort().get());
+		 System.out.println(" WorkerId : " +jobStatus.getWorkerId().get());
+		 System.out.println(" DriverState : " +jobStatus.getDriverState().toString());
 	}
 }
