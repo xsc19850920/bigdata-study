@@ -15,7 +15,7 @@ public class SparkSubmitProcess {
 						.masterHost("58.2.221.224")
 						.sparkVersion("1.6.3")
 						.masterPort(6066) //submit to spark rest api (6066 from spark webaddress 58.2.221.224:8080)
-						.clusterMode(ClusterMode.mesos)
+						.clusterMode(ClusterMode.spark)
 						.build();
 		 
 		 String submissionId = sparkRestClient.prepareJobSubmit()
@@ -23,7 +23,6 @@ public class SparkSubmitProcess {
 						.mainClass("com.genpact.job.Job")
 						.appResource("/bigdata/spark/xsc/stockcalc.jar")
 						.submit();
-		 
 		 
 		 JobStatusResponse jobStatus =  sparkRestClient.checkJobStatus()
 				    								   .withSubmissionIdFullResponse(submissionId);
